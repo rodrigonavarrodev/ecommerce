@@ -16,10 +16,22 @@ class CartsService implements CRUD {
   async addProducts(userId: string, resource: any) {
     const cart = await CartsDao.getCart(userId);
     let products: any = cart?.products
-    
-    for (let i = 0; i < resource.products.length; i++) {     
-      products.push(resource.products[i]);
+    products.push(resource)
+    return CartsDao.addProducts(userId, products)
+  }
+
+  async removeProducts(userId: string, resource: any) {
+    const cart = await CartsDao.getCart(userId);
+    let products: any = cart?.products
+    const found = products.find((element: any) => element._id == resource._id);
+    if ( found.quantity - resource.quantity == 0 ) {
+      let index = products.indexOf(found);
+      products.splice(index, 1)    
     }
+    found.quantity = found.quantity - resource.quantity
+    
+    console.log(products);
+    
     return CartsDao.addProducts(userId, products)
   }
   

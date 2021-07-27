@@ -13,6 +13,7 @@ export default class Router {
     debugLog("Router - Start adding routes.");
     const routes: Array<CommonRoutesConfig> = [];
 
+    //llamado a las rutas
     routes.push(new CartsRoutes(app));
     routes.push(new CategoriesRoutes(app));
     routes.push(new ProductsRoutes(app));

@@ -15,29 +15,29 @@ export class CategoriesRoutes extends CommonRoutesConfig {
     this.app
       .route("/categories")
 
-      .get(CategoriesController.getAllCategories)
+      .get(CategoriesController.getAllCategories) //consulta todas las categorias
 
       .post(
         body("name").isString().notEmpty(),
         BodyValidationMiddleware.verifyBodyFieldsErrors,
-        AuthValidationMiddleware.validJWTNeeded,
-        AuthValidationMiddleware.isAdmin,
-        CategoriesMiddleware.verifyCategoryExists,
-        CategoriesController.createCategory
+        AuthValidationMiddleware.validJWTNeeded, //valida JWT
+        AuthValidationMiddleware.isAdmin, //verifica si es Admin
+        CategoriesMiddleware.verifyCategoryExists, //verifica que ese Name no exista (solo puede ingresar las enumeradas en el categoires.dao.ts)
+        CategoriesController.createCategory //crea la categoria
       );
 
       this.app
       .route("/categories/:categoryId")
 
       .get(
-        CategoriesMiddleware.validateObjectid,
-        CategoriesMiddleware.validateCategoryId,
-        CategoriesController.getCategoryById
+        CategoriesMiddleware.validateObjectid, //valida que sea un id de mongo
+        CategoriesMiddleware.validateCategoryId, //valida que el id pertenezca a un id de la coleccion Categories
+        CategoriesController.getCategoryById //devuelve la categoria
       );
 
-      //Actualizar producto
-      //Borrar producto
-      //Buscar productos por categoria (Ver video Udemy)
+      //FALTA
+      //Actualizar categoria
+      //Borrar categoria
 
     return this.app;
   }

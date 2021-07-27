@@ -17,15 +17,14 @@ const port = 3000;
 //const routes: Array<CommonRoutesConfig> = [];
 const debugLog: debug.IDebugger = debug('app');
 
-// here we are adding middleware to parse all incoming requests as JSON 
+// valida request como json
 app.use(express.json());
 
 
-// here we are adding middleware to allow cross-origin requests
+// cors
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
-// here we are preparing the expressWinston logging middleware configuration,
-// which will automatically log all HTTP requests handled by Express.js
+//configuracion de Winston
 const loggerOptions: expressWinston.LoggerOptions = {
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
@@ -35,20 +34,20 @@ const loggerOptions: expressWinston.LoggerOptions = {
     ),
 };
 
-// here we are crashing on unhandled errors and spitting out a stack trace,
-// but only when in debug mode
+//debug
 if (process.env.DEBUG) {
     process.on('unhandledRejection', function(reason) {
         debugLog('Unhandled Rejection:', reason);
         process.exit(1);
     });
 } else {
-    loggerOptions.meta = false; // when not debugging, make terse
+    loggerOptions.meta = false;
 }
 
-// initialize the logger with the above configuration
+// inicializar Winston
 app.use(expressWinston.logger(loggerOptions));
 
+//rutas
 Router.init(app);
 
 export default app;

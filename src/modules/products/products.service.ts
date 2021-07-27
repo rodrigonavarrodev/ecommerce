@@ -27,11 +27,15 @@ class ProductsService implements CRUD {
   }
 
   async subtractProductStock(resource: any) {
-    for (let i = 0; i < resource.products.length; i++) {
-      const product: any = await this.getProductById(resource.products[i]._id);
-      let stock = product.stock - resource.products[i].quantity
-      await ProductsDao.updateStock(resource.products[i]._id, stock)
-    }
+    const product: any = await this.getProductById(resource.productId);
+    let stock = product.stock - resource.quantity
+    await ProductsDao.updateStock(resource.productId, stock)
+  }
+
+  async addProductStock(resource: any) {
+    const product: any = await this.getProductById(resource.productId);
+    let stock = product.stock + resource.quantity
+    await ProductsDao.updateStock(resource.productId, stock)
   }
 
   productDetails(product: any) {

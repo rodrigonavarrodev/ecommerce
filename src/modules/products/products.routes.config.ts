@@ -16,7 +16,7 @@ export class ProductsRoutes extends CommonRoutesConfig {
     this.app
       .route("/products")
 
-      .get(ProductsController.getAllProducts)
+      .get(ProductsController.getAllProducts) //trae todos los productos creados
 
       .post(
         body("name").isString().notEmpty(),
@@ -26,35 +26,34 @@ export class ProductsRoutes extends CommonRoutesConfig {
         body("stock").isNumeric().notEmpty(),
         body("images").isArray().optional(),
         BodyValidationMiddleware.verifyBodyFieldsErrors,
-        AuthValidationMiddleware.validJWTNeeded,
-        AuthValidationMiddleware.isAdmin,
-        ProductsMiddleware.validateObjectIdCategory,
-        ProductsMiddleware.validateIdCategory,
-        ProductsController.createProduct
+        AuthValidationMiddleware.validJWTNeeded, //valida JWT
+        AuthValidationMiddleware.isAdmin, //valida que sea usuario Admin
+        ProductsMiddleware.validateObjectIdCategory, //valida que el categoryId sea un id de mongo
+        ProductsMiddleware.validateIdCategory, //valida que el categoryId pertenezca a una caterogoria de la coleccion Categories
+        ProductsController.createProduct //crea el producto
       );
 
     this.app
       .route("/products/:productId")
 
       .get(
-        ProductsMiddleware.validateObjectid,
-        ProductsMiddleware.validateProductId,
-        ProductsController.getProductById
+        ProductsMiddleware.validateObjectid, //valida que sea un id de mongo
+        ProductsMiddleware.validateProductId, //valida que el id pertenezca a un producto de la coleccion Products
+        ProductsController.getProductById //ddevuelve el producto
       );
 
     this.app
-      .route("/products/categories/:categoryId") //REVEEER LA RUTA
+      .route("/products/categories/:categoryId") //REVEEER NOMBRE DE LA RUTA
 
       .get(
-        CategoriesMiddleware.validateObjectid,
-        CategoriesMiddleware.validateCategoryId,
-        ProductsController.getProductsByCategory
+        CategoriesMiddleware.validateObjectid, //valida que categoryId sea un mongo id
+        CategoriesMiddleware.validateCategoryId, //valida que el categoryId pertenezca a una caterogoria de la coleccion Categories
+        ProductsController.getProductsByCategory //devuelve los productos pertenecientes a esa categoria
       );
 
-
+      //FALTA
       //Actualizar producto
       //Borrar producto
-      //Buscar productos por categoria (Ver video Udemy)
 
     return this.app;
   }

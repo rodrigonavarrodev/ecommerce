@@ -7,7 +7,7 @@ const log: debug.IDebugger = debug("app:carts-dao");
 
 export interface Cart extends mongoose.Document {
   userId: string;
-  products: [{ _id: string, quantity: number }];
+  products: [{ productId: string, quantity: number }];
 }
 
 class CartsDao {
@@ -17,7 +17,7 @@ class CartsDao {
     {
       userId: { type: Schema.Types.ObjectId, ref: "Users" },
       products: [
-        { _id: { type: Schema.Types.ObjectId, ref: "Products"}, quantity: Number  }
+        { productId: { type: Schema.Types.ObjectId, ref: "Products"}, quantity: Number  }
       ],  
     },
     { timestamps: true }

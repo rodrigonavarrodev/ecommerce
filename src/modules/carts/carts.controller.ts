@@ -37,6 +37,22 @@ class CartsController {
     }
   }
 
+  async removeProducts(req: express.Request, res: express.Response) {
+    try {
+      const cart = await CartsService.removeProducts(req.jwt.userId, req.body);
+      await ProductsService.addProductStock(req.body) //sumo stock en el producto
+      return res
+        .status(200)
+        .send({ msg: "Successful response", data: cart });
+    } catch (error) {
+      if (error.msg) {
+        return res.status(400).send({ errors: [error] });
+      } else {
+        return res.status(400).send({ errors: [error.message] });
+      }
+    }
+  }
+
 }
 
 export default new CartsController();

@@ -19,22 +19,22 @@ export class UsersRoutes extends CommonRoutesConfig {
       body("firstname").isString().notEmpty(),
       body("lastname").isString().notEmpty(),
       body("phone").isString().notEmpty(),
-      body("admin").isBoolean().optional(),
+      body("admin").isBoolean().optional(), //es optional, por defecto va en false
       BodyValidationMiddleware.verifyBodyFieldsErrors,
-      UsersMiddleware.validateSameEmailDoesntExist,
-      UsersMiddleware.isSecurePassword,
-      UsersMiddleware.validatePhone,
-      UsersMiddleware.validatePassword,
-      UsersController.register
+      UsersMiddleware.validateSameEmailDoesntExist, //verifica que el email ingresado ya exista
+      UsersMiddleware.isSecurePassword, //verifica que la contraseña sea segura
+      UsersMiddleware.validatePhone, //verifica que el formato de telefono sea correcto
+      UsersMiddleware.validatePassword, //verifica que las 2 contraseñas sean iguales
+      UsersController.register //registra el nuevo usuario y crea un carrito vacio
     );
 
     this.app.route("/users/login").post(
       body("email").isEmail().notEmpty(),
       body("password").isString().notEmpty(),
       BodyValidationMiddleware.verifyBodyFieldsErrors,
-      UsersMiddleware.validateEmailExists,
-      UsersMiddleware.validateUserPassword,
-      UsersController.login
+      UsersMiddleware.validateEmailExists, //verifica que sea un email registrado
+      UsersMiddleware.validateUserPassword, //verifica la contraseña
+      UsersController.login //se loguea y devuelve token
     );
 
     return this.app;
