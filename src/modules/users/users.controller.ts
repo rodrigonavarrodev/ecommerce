@@ -8,8 +8,8 @@ const log: debug.IDebugger = debug("app:users-controller");
 class UsersController {
   async register(req: express.Request, res: express.Response) {
     try {
-      await UsersService.createUser(req.body);
-      return res.status(201).send({ msg: "Successful registration" });
+      const newUser = await UsersService.createUser(req.body);
+      return res.status(201).send({ msg: "Successful registration", data: newUser});
     } catch (error) {
       if (error.msg) {
         return res.status(400).send({ errors: [error] });

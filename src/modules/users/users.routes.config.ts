@@ -14,36 +14,23 @@ export class UsersRoutes extends CommonRoutesConfig {
   configureRoutes() {
     this.app.route("/users/register").post(
       body("email").isEmail().notEmpty(),
-      body("password")
-        .isString()
-        .isLength({ min: 6 })
-        .withMessage("The password must be 6 alphanumeric characters")
-        .matches(/^[0-9a-zA-Z]+$/),
-      body("confirmpassword")
-        .isString()
-        .isLength({ min: 6 })
-        .withMessage("The password must be 6 alphanumeric characters")
-        .matches(/^[0-9a-zA-Z]+$/),
+      body("password").isString().notEmpty(),
+      body("confirmpassword").isString().notEmpty(),
       body("firstname").isString().notEmpty(),
       body("lastname").isString().notEmpty(),
-      body("address").isString().optional(),
-      body("city").isString().optional(),
-      body("country").isString().optional(),
-      body("datebirth").isString().optional(),
-      body("phone").isString().optional(),
-      body("profilepic").isString().optional(),
+      body("phone").isString().notEmpty(),
+      body("admin").isBoolean().optional(),
       BodyValidationMiddleware.verifyBodyFieldsErrors,
+      UsersMiddleware.validateSameEmailDoesntExist,
+      UsersMiddleware.isSecurePassword,
+      UsersMiddleware.validatePhone,
       UsersMiddleware.validatePassword,
       UsersController.register
     );
 
     this.app.route("/users/login").post(
       body("email").isEmail().notEmpty(),
-      body("password")
-        .isString()
-        .isLength({ min: 6 })
-        .withMessage("The password must be 6 alphanumeric characters")
-        .matches(/^[0-9a-zA-Z]+$/),
+      body("password").isString().notEmpty(),
       BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validateEmailExists,
       UsersMiddleware.validateUserPassword,

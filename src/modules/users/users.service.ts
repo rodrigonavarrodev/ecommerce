@@ -4,13 +4,17 @@ import UsersDao from "./users.dao";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../../config/config"
+import CartsService from "../carts/carts.service";
 
 const log: debug.IDebugger = debug("app:users-service");
 
 class UsersService implements CRUD {
   async createUser(resource: UsersModel.registerUser) {
     resource.password = this.hash(resource.password);
-    return UsersDao.addUser(resource);
+    const newUser = await UsersDao.addUser(resource);
+    //creo el carrito del usuario
+    await this.createCart(newUser.id)
+    return { ...this.userDetails(newUser)}
   }
 
   hash(password: string) {
@@ -22,7 +26,7 @@ class UsersService implements CRUD {
       userId: resource.id
     },
     config.secret!,
-    { expiresIn: "15m" }
+    { expiresIn: config.tokenExpires }
     )
   }
 
@@ -42,30 +46,28 @@ class UsersService implements CRUD {
     return { ...this.userDetails(user)}
   }
 
+  async getUserRoleById(id: string) {
+    return UsersDao.getUserById(id)
+  }
+
+  async createCart(userId: string){
+    return CartsService.createCart(userId)
+  }
+
   userDetails(user: any) {
     const {
       id,
       email,
       firstname,
       lastname,
-      addres,
-      city,
-      country,
-      datebirth,
       phone,
-      profilepic
     } = user;
     return {
       id,
       email,
       firstname,
       lastname,
-      addres,
-      city,
-      country,
-      datebirth,
-      phone,
-      profilepic
+      phone
     }
   }
 }

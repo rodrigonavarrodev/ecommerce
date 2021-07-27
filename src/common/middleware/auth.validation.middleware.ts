@@ -21,8 +21,6 @@ class AuthValidationMiddleware {
           if (validUser) {
             req.jwt = jwtUser;
             next();
-          } else {
-            return res.status(401).send({ msg: "Unauthorized" });
           }
         }
       } catch (err) {
@@ -30,6 +28,24 @@ class AuthValidationMiddleware {
       }
     } else {
       return res.status(401).send({ msg: "Unauthorized" });
+    }
+  }
+
+  async isAdmin(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) {
+    try {
+      const user = await UsersService.getUserRoleById(req.jwt.userId);
+      if (user?.admin === true) {
+        next();
+      } else {
+        return res.status(401).send({ msg: "Unauthorized" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(403).send({ msg: "Error" });
     }
   }
 }

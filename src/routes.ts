@@ -1,6 +1,8 @@
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { UsersRoutes } from "./modules/users/users.routes.config";
 import { ProductsRoutes } from "./modules/products/products.routes.config";
+import { CategoriesRoutes } from "./modules/categories/categories.routes.config"
+import { CartsRoutes } from "./modules/carts/carts.routes.config";
 
 import debug from "debug";
 
@@ -11,6 +13,8 @@ export default class Router {
     debugLog("Router - Start adding routes.");
     const routes: Array<CommonRoutesConfig> = [];
 
+    routes.push(new CartsRoutes(app));
+    routes.push(new CategoriesRoutes(app));
     routes.push(new ProductsRoutes(app));
     routes.push(new UsersRoutes(app));
 
