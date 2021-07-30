@@ -34,6 +34,14 @@ class CartsService implements CRUD {
     
     return CartsDao.addProducts(userId, products)
   }
+
+  async emptyCart(userId: string) {
+    const cart = await CartsDao.getCart(userId);
+    let products: any = cart?.products
+    products = new Array()
+    return CartsDao.addProducts(userId, products)
+
+  }
   
 }
 

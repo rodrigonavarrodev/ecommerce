@@ -2,6 +2,7 @@ import express from "express";
 import debug from "debug";
 import CartsService from "./carts.service";
 import ProductsService from "../products/products.service";
+import OrdersService from "../orders/orders.service";
 
 const log: debug.IDebugger = debug("app:products-controller");
 
@@ -44,6 +45,23 @@ class CartsController {
       return res
         .status(200)
         .send({ msg: "Successful response", data: cart });
+    } catch (error) {
+      if (error.msg) {
+        return res.status(400).send({ errors: [error] });
+      } else {
+        return res.status(400).send({ errors: [error.message] });
+      }
+    }
+  }
+
+  async createOrder(req: express.Request, res: express.Response) {
+    try {
+      const cart: any = await CartsService.getCart(req.jwt.userId);
+      const order = await OrdersService.createOrder(req.jwt.userId, cart.products)
+      await CartsService.emptyCart(req.jwt.userId) //vacio el carrito
+      return res
+        .status(200)
+        .send({ msg: "Successful response", data: order });
     } catch (error) {
       if (error.msg) {
         return res.status(400).send({ errors: [error] });

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import debug from 'debug';
+import config from "../../config/config";
 
 const log: debug.IDebugger = debug('app:mongoose-service');
 
@@ -23,8 +24,9 @@ class MongooseService {
     connectWithRetry = () => {
         log('Attempting MongoDB connection (will retry if needed)');
         mongoose
-        //.connect(`mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PW}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`, this.mongooseOptions)
-       .connect(`mongodb://localhost:27017/ecommerce-coderhouse`, this.mongooseOptions)
+        .connect(`mongodb+srv://${config.mongoUser}:${config.mongoPassword}@${config.mongoHost}/${config.mongoDatabase}?retryWrites=true&w=majority`, this.mongooseOptions)
+        //.connect(`mongodb+srv://coderhouse:coderhouse@ecommerce-coderhouse.qyuld.mongodb.net/ecommerce-coderhouse?retryWrites=true&w=majority`, this.mongooseOptions)
+        //.connect(`mongodb://localhost:27017/ecommerce-coderhouse`, this.mongooseOptions)
             .then(() => {
                 log('MongoDB is connected');
             })

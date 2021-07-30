@@ -97,7 +97,75 @@ class CartsMiddleware {
     }
     next();
   }
+
+  async validateEmpyCart(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) {
+    const cart: any = await CartsService.getCart(req.jwt.userId);
+
+    if (cart.products.length == 0) {
+      return res.status(400).send({
+        errors: [
+          {
+            msg: `There are no products in the cart`,
+          },
+        ],
+      });
+    }
+    next();
+  }
+
+  async validateProductsinCart(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) {
+    const cart: any = await CartsService.getCart(req.jwt.userId);
+
+    for (let i = 0; i < cart.products.length; i++) {
+      const product: any = await ProductsService.getProductById(
+        req.body.products[i]._id
+      );
+      if (!product) {
+        return res.status(400).send({
+          errors: [
+            {
+              msg: `the id ${req.body.products[i]._id} does not belong to any product`,
+            },
+          ],
+        });
+      }
+    }
+    next();
+  }
+
+  async validateProductsInCartQuantity(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) {
+    const cart: any = await CartsService.getCart(req.jwt.userId);
+
+    for (let i = 0; i < cart.products.length; i++) {
+      const product: any = await ProductsService.getProductById(
+        req.body.products[i]._id
+      );
+      if (product.stock < req.body.products[i].quantity) {
+        return res.status(400).send({
+          errors: [
+            {
+              msg: `there is no stock of the product with id ${req.body.products[i]._id}`,
+            },
+          ],
+        });
+      }
+    }
+    next();
+  }
 }
+
 export default new CartsMiddleware();
 
 //para varios ID
@@ -140,25 +208,5 @@ async validateProductId(
 }
 
 
-async validateProductQuantity(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) {
-  for (let i = 0; i < req.body.products.length; i++) {
-    const product: any = await ProductsService.getProductById(
-      req.body.products[i]._id
-    );
-    if (product.stock < req.body.products[i].quantity) {
-      return res.status(400).send({
-        errors: [
-          {
-            msg: `there is no stock of the product with id ${req.body.products[i]._id}`,
-          },
-        ],
-      });
-    }
-  }
-  next();
-}
+
 } */

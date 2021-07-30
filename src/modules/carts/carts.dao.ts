@@ -30,7 +30,12 @@ class CartsDao {
   }
 
   async getCart(userId: string) {
-    return this.Cart.findOne({ userId });
+    return this.Cart.findOne({ userId }).populate({
+      path: "products",
+      populate: {
+        path: "productId", select: "name description price"
+      },
+    });;
   }
 
   async createCart(userId: string) {

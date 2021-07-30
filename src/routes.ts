@@ -3,6 +3,7 @@ import { UsersRoutes } from "./modules/users/users.routes.config";
 import { ProductsRoutes } from "./modules/products/products.routes.config";
 import { CategoriesRoutes } from "./modules/categories/categories.routes.config"
 import { CartsRoutes } from "./modules/carts/carts.routes.config";
+import { OrdersRoutes } from "./modules/orders/orders.routes.config";
 
 import debug from "debug";
 
@@ -14,6 +15,7 @@ export default class Router {
     const routes: Array<CommonRoutesConfig> = [];
 
     //llamado a las rutas
+    routes.push(new OrdersRoutes(app));
     routes.push(new CartsRoutes(app));
     routes.push(new CategoriesRoutes(app));
     routes.push(new ProductsRoutes(app));

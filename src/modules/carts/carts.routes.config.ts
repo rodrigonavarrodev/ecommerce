@@ -45,6 +45,16 @@ export class CartsRoutes extends CommonRoutesConfig {
         CartsController.removeProducts //elimina o resta cantidad del producto del carrito y suma el stock
       );
 
+    this.app
+    .route("/cart/submit")
+    .post(
+      AuthValidationMiddleware.validJWTNeeded, //valida JWT
+      CartsMiddleware.validateEmpyCart, //valida que el carrito no este vacio
+      //CartsMiddleware.validateProductsinCart, //valida que los ids de productos del carrito pertenezcan a la coleccion de Products
+      //CartsMiddleware.validateProductsInCartQuantity, //vuelve a validar que hay stock antes de generar la orden
+      CartsController.createOrder
+    )
+
     return this.app;
   }
 }
