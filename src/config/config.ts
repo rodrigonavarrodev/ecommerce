@@ -8,5 +8,6 @@ export default {
     mongoUser: process.env.MONGO_USER,
     mongoPassword: process.env.MONGO_PW,
     mongoHost: process.env.MONGO_HOST,
-    mongoDatabase: process.env.MONGO_DB
+    mongoDatabase: process.env.MONGO_DB,
+    nodemailerPass: process.env.NODEMAILER_PW
 }

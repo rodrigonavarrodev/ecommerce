@@ -2,6 +2,7 @@ import express from "express";
 
 import debug from "debug";
 import UsersService from "./users.service";
+import MailsService from "../../common/services/mails/mails.service";
 
 const log: debug.IDebugger = debug("app:users-controller");
 

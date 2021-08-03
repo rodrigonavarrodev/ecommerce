@@ -21,6 +21,10 @@ export class UsersRoutes extends CommonRoutesConfig {
       body("lastname").isString().notEmpty(),
       body("phone").isString().notEmpty(),
       body("admin").isBoolean().optional(), //es optional, por defecto va en false
+      body("address").isString().notEmpty(),
+      body("apartment").isString().optional(),
+      body("city").isString().notEmpty(),
+      body("postalCode").isString().notEmpty(),
       BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validateSameEmailDoesntExist, //verifica que el email ingresado ya exista
       UsersMiddleware.isSecurePassword, //verifica que la contraseña sea segura

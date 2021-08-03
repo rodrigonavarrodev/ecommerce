@@ -10,6 +10,7 @@ export interface Order extends mongoose.Document {
   products: [{ productId: string; quantity: number; price: number }];
   status: string;
   total: number;
+  delivery: string
 }
 
 class OrdersDao {
@@ -31,6 +32,7 @@ class OrdersDao {
         default: "Generated",
       },
       total: Number,
+      delivery: String
     },
 
     { timestamps: true }
@@ -44,11 +46,12 @@ class OrdersDao {
     log("Created new instance of StatesDao");
   }
 
-  async createOrder(userId: string, products: [], totalPrice: number) {
+  async createOrder(userId: string, products: [], totalPrice: number, delivery: string) {
     const order = new this.Order({
       userId: userId,
       products: products,
       total: totalPrice,
+      delivery: delivery
     });
     await order.save();
     return order;

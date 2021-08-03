@@ -50,8 +50,7 @@ export class CartsRoutes extends CommonRoutesConfig {
     .post(
       AuthValidationMiddleware.validJWTNeeded, //valida JWT
       CartsMiddleware.validateEmpyCart, //valida que el carrito no este vacio
-      //CartsMiddleware.validateProductsinCart, //valida que los ids de productos del carrito pertenezcan a la coleccion de Products
-      //CartsMiddleware.validateProductsInCartQuantity, //vuelve a validar que hay stock antes de generar la orden
+      CartsMiddleware.validateProductsinCart, //valida que los ids de productos del carrito pertenezcan a la coleccion de Products
       CartsController.createOrder
     )
 

@@ -126,13 +126,13 @@ class CartsMiddleware {
 
     for (let i = 0; i < cart.products.length; i++) {
       const product: any = await ProductsService.getProductById(
-        req.body.products[i]._id
+        cart.products[i].productId
       );
       if (!product) {
         return res.status(400).send({
           errors: [
             {
-              msg: `the id ${req.body.products[i]._id} does not belong to any product`,
+              msg: `the id ${cart.products[i].productId} does not belong to any product`,
             },
           ],
         });
@@ -141,6 +141,8 @@ class CartsMiddleware {
     next();
   }
 
+
+  //No se valida antes de crear la orden porque ya lo habia descontado del stock del producto
   async validateProductsInCartQuantity(
     req: express.Request,
     res: express.Response,
@@ -150,13 +152,13 @@ class CartsMiddleware {
 
     for (let i = 0; i < cart.products.length; i++) {
       const product: any = await ProductsService.getProductById(
-        req.body.products[i]._id
+        cart.products[i].productId
       );
       if (product.stock < req.body.products[i].quantity) {
         return res.status(400).send({
           errors: [
             {
-              msg: `there is no stock of the product with id ${req.body.products[i]._id}`,
+              msg: `there is no stock of the product with id ${cart.products[i].productId}`,
             },
           ],
         });

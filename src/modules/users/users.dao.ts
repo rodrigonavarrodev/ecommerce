@@ -10,7 +10,11 @@ export interface User extends mongoose.Document {
     firstname: string,
     lastname: string,
     phone: string,
-    admin?: boolean
+    admin?: boolean,
+    address: string,
+    apartment: string,
+    city: string,
+    postalCode: string
 };
 
 class UsersDao {
@@ -23,6 +27,10 @@ class UsersDao {
         lastname: String,
         phone: String,
         admin: { type: Boolean, default: false },
+        address: String,
+        apartment: String,
+        city: String,
+        postalCode: String
     }, { timestamps: true });
 
     User = mongooseService.getMongoose().model<User>('Users', this.UsersSchema);
