@@ -10,6 +10,19 @@ class OrdersService implements CRUD {
     products.map((x:any) => totalPrice += x.productId.price )
     return OrdersDao.createOrder(userId, products, totalPrice);
   }
+
+  async getOrders(userId: string) {
+    return OrdersDao.getOrdersByUser(userId)
+  }
+
+  async getOrderById(orderId: string) {
+    return OrdersDao.getOrderById(orderId)
+  }
+
+  async completeOrder(orderId: string) {
+    let status = "Finalized"
+    return OrdersDao.completeOrder( orderId, status )
+  }
   
 }
 

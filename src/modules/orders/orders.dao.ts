@@ -27,7 +27,7 @@ class OrdersDao {
       ],
       status: {
         type: String,
-        enum: ["Generated", "Finalized", /* "On the way", "Paid" */ ],
+        enum: ["Generated", "Finalized" /* "On the way", "Paid" */],
         default: "Generated",
       },
       total: Number,
@@ -45,9 +45,42 @@ class OrdersDao {
   }
 
   async createOrder(userId: string, products: [], totalPrice: number) {
-    const order = new this.Order({ userId: userId, products: products, total: totalPrice });
+    const order = new this.Order({
+      userId: userId,
+      products: products,
+      total: totalPrice,
+    });
     await order.save();
     return order;
+  }
+
+  async getOrdersByUser(userId: string) {
+    return this.Order.find({ userId }).populate({
+      path: "products",
+      populate: {
+        path: "productId",
+        select: "name description price",
+      },
+    });
+  }
+
+  async getOrderById(orderId: string) {
+    return this.Order.findById(orderId).populate({
+      path: "products",
+      populate: {
+        path: "productId",
+        select: "name description price",
+      },
+    });
+  }
+
+  async completeOrder(orderId: string, status: string) {
+    await this.Order.findByIdAndUpdate(
+      { _id: orderId },
+      { $set: { status: status } },
+      { new: true }
+    );
+    return this.getOrderById(orderId)
   }
 }
 

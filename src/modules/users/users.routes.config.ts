@@ -1,5 +1,6 @@
 import { CommonRoutesConfig } from "../../common/common.routes.config";
 import BodyValidationMiddleware from "../../common/middleware/body.validation.middleware";
+import AuthValidationMiddleware from "../../common/middleware/auth.validation.middleware";
 import UsersMiddleware from "./users.middleware";
 import UsersController from "./users.controller";
 import { body } from "express-validator";
@@ -36,6 +37,11 @@ export class UsersRoutes extends CommonRoutesConfig {
       UsersMiddleware.validateUserPassword, //verifica la contraseña
       UsersController.login //se loguea y devuelve token
     );
+
+    this.app.route("/users/info").get(
+      AuthValidationMiddleware.validJWTNeeded, //valida JWT
+      UsersController.getUserInfo
+    )
 
     return this.app;
   }
