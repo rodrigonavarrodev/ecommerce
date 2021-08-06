@@ -1,0 +1,116 @@
+<div class="col-md-8 mx-auto">
+    <h3>Ingrese un producto</h3>
+    <div class="card card-body">
+        <form id="form">
+            <div class="form-group">
+                <input id="token" autocomplete="off" type="text" name="token" class="form-control" placeholder="Token"
+                    autofocus required>
+            </div>
+            <div class="form-group">
+                <input id="mensaje" autocomplete="off" type="text" name="mensaje" class="form-control"
+                    placeholder="Mensaje" required>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-block mt-5">Enviar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="col-md-8 mx-auto">
+    <h3>Mensajes</h3>
+    <div class="card card-body" id='divChatbox'>
+        <p id="recientes">Mensajes recientes</p>
+    </div>
+</div>
+
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io()
+    const form = document.getElementById('form')
+    const token = document.getElementById('token')
+    const mensaje = document.getElementById('mensaje')
+    let recientes = document.getElementById('recientes')
+    let divChatbox = document.getElementById('divChatbox')
+
+    socket.on('connect', () => {
+        console.log('Conectado al servidor')
+        socket.emit('entrarAlChat', {
+            id: socket.id
+        })
+
+        form.addEventListener('submit', (event) => {
+            //para no recargar la pagina
+            event.preventDefault()
+            socket.emit('mensaje', {
+                id: socket.id,
+                token: token.value,
+                mensaje: mensaje.value
+            })
+            switch (mensaje.value) {
+                case 'Stock':
+                    renderizarStock()
+                    break
+                case 'Orden':
+                    renderizarOrden()
+                    break
+                case 'Carrito':
+                    renderizarCarrito()
+                    break
+                default:
+                    renderizarMensaje()
+                    break
+            }
+
+            token.value = ''
+            mensaje.value = ''
+        })
+
+    })
+
+    function renderizarStock() {
+        socket.on("resp-message", (data) => {
+            let nuevoMensaje = document.createElement('p')
+            for (let i = 0; i < data.info.length; i++) {
+                nuevoMensaje.textContent = data.info[i]
+                divChatbox.appendChild(nuevoMensaje)
+            }
+        });
+    }
+
+    function renderizarOrden() {
+        socket.on("resp-message", (data) => {
+            let nuevoMensaje = document.createElement('p')
+            nuevoMensaje.textContent = data.info
+            divChatbox.appendChild(nuevoMensaje)
+        })
+    }
+
+    function renderizarCarrito() {
+        socket.on("resp-message", (data) => {
+            let nuevoMensaje = document.createElement('p')
+            nuevoMensaje.textContent = data.info
+            console.log(data)
+            divChatbox.appendChild(nuevoMensaje)
+        })
+    }
+
+    function renderizarMensaje() {
+        socket.on("resp-message", (data) => {
+            let nuevoMensaje = document.createElement('p')
+            nuevoMensaje.textContent = data.info
+            divChatbox.appendChild(nuevoMensaje)
+        })
+    }
+
+
+
+    socket.on('disconnect', () => {
+        console.log('Desconectado del servidor')
+    })
+
+
+</script>
