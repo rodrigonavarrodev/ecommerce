@@ -1,4 +1,4 @@
-/* import io from "../../../init";
+import io from "../../../init";
 import jwt from "jsonwebtoken";
 import config from "../../../config/config";
 import { Jwt } from "../../../common/types/jwt";
@@ -73,4 +73,3 @@ io.on("connection", (socket) => {
 
 
 
- */

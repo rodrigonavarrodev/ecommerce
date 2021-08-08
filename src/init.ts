@@ -7,10 +7,10 @@ import config from "./config/config";
 const port = config.port;
 const server: http.Server = http.createServer(app);
 const debugLog: debug.IDebugger = debug("init");
-/* const io = new Server(server);
+const io = new Server(server);
 
 export default io;
-import "./common/services/sockets/socket" */
+import "./common/services/sockets/socket"
 
 
 server.listen(port, () => {

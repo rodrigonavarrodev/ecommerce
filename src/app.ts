@@ -24,7 +24,7 @@ app.use(express.json());
 // cors
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
-/* //Handelbars
+//Handelbars
 app.engine(
     'hbs',
     handlebars({
@@ -43,7 +43,7 @@ app.use(express.static('public'))
 //renderizar vista
 app.get('/chat', function (req, res) {
     res.render('form')
-}) */
+})
 
 //configuracion de Winston
 const loggerOptions: expressWinston.LoggerOptions = {
