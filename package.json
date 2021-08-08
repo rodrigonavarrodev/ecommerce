@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./dist/init.js", 
+    "start": "node ./dist/init.js",
     "debug": "set DEBUG=* && npm run start",
     "nodemon:start": "nodemon --exec ts-node --files ./src/init.ts",
     "test": "jest --detectOpenHandles"
