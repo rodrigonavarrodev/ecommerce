@@ -40,6 +40,29 @@ export class ProductsRoutes extends CommonRoutesConfig {
         ProductsMiddleware.validateObjectid, //valida que sea un id de mongo
         ProductsMiddleware.validateProductId, //valida que el id pertenezca a un producto de la coleccion Products
         ProductsController.getProductById //ddevuelve el producto
+      )
+
+      .put(
+        body("name").isString().optional(),
+        body("description").isString().optional(),
+        body("category").isString().optional(),
+        body("price").isNumeric().optional(),
+        body("stock").isNumeric().optional(),
+        body("images").isArray().optional(),
+        BodyValidationMiddleware.verifyBodyFieldsErrors,
+        AuthValidationMiddleware.validJWTNeeded, //valida JWT
+        AuthValidationMiddleware.isAdmin, //valida que sea usuario Admin
+        ProductsMiddleware.validateObjectid, //valida que sea un id de mongo
+        ProductsMiddleware.validateProductId, //valida que el id pertenezca a un producto de la coleccion Products
+        ProductsController.updateProduct //devuelve los productos pertenecientes a esa categoria
+      )
+
+      .delete(
+        AuthValidationMiddleware.validJWTNeeded, //valida JWT
+        AuthValidationMiddleware.isAdmin, //valida que sea usuario Admin
+        ProductsMiddleware.validateObjectid, //valida que sea un id de mongo
+        ProductsMiddleware.validateProductId, //valida que el id pertenezca a un producto de la coleccion Products
+        ProductsController.deleteProduct //devuelve los productos pertenecientes a esa categoria
       );
 
     this.app
@@ -49,12 +72,9 @@ export class ProductsRoutes extends CommonRoutesConfig {
         CategoriesMiddleware.validateObjectid, //valida que categoryId sea un mongo id
         CategoriesMiddleware.validateCategoryId, //valida que el categoryId pertenezca a una caterogoria de la coleccion Categories
         ProductsController.getProductsByCategory //devuelve los productos pertenecientes a esa categoria
-      );
+      )
 
-      //FALTA
-      //Actualizar producto
-      //Borrar producto
-
+      
     return this.app;
   }
 }

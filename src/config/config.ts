@@ -10,5 +10,6 @@ export default {
     mongoHost: process.env.MONGO_HOST,
     mongoDatabase: process.env.MONGO_DB,
     nodemailerPass: process.env.NODEMAILER_PW,
-    cloundinaryUrl: process.env.CLOUDINARY_URL
+    cloundinaryUrl: process.env.CLOUDINARY_URL,
+    cloudinaryPath: process.env.CLOUDINARY_PATH
 }

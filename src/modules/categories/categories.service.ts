@@ -29,6 +29,16 @@ class CategoriesService implements CRUD {
       name,
     };
   }
+
+  async updateCategory(id: string, resource: CategoriesModel.createCategory) {
+    const category = await CategoriesDao.update(id, resource);
+    return { ...this.categoryDetails(category) };
+  }
+
+  async deleteCategory(id: string) {
+    const category = await CategoriesDao.delete(id);
+    return { ...this.categoryDetails(category) };
+  }
 }
 
 export default new CategoriesService();

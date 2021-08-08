@@ -14,9 +14,18 @@ class CategoriesDao {
 
   CategoriesSchema = new this.Schema(
     {
-      name: { type: String,
-      enum: ["Perifericos", "Notebooks", "Sillas", "Audio", "Video", "Software", "Otros"]
-    }
+      name: {
+        type: String,
+        enum: [
+          "Perifericos",
+          "Notebooks",
+          "Sillas",
+          "Audio",
+          "Video",
+          "Software",
+          "Otros",
+        ],
+      },
     },
     { timestamps: false }
   );
@@ -44,7 +53,19 @@ class CategoriesDao {
   }
 
   async getById(id: string) {
-    return this.Category.findById(id)
+    return this.Category.findById(id);
+  }
+
+  async update(id: string, categoriesFields: CategoriesModel.createCategory) {
+    return this.Category.findByIdAndUpdate(
+      { _id: id },
+      { $set: { name: categoriesFields.name } },
+      { new: true }
+    );
+  }
+
+  async delete(id: string) {
+    return this.Category.findByIdAndDelete(id);
   }
 }
 

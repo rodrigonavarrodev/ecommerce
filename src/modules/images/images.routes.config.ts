@@ -17,12 +17,33 @@ export class ImagesRoutes extends CommonRoutesConfig {
 
   configureRoutes() {
     this.app
-      .route("/images/upload")
+      .route("/image/upload")
       .post(
         upload.single("file"), 
-        //ImagesMiddleware.validateImageFormat,
-        //ImagesMiddleware.validateImageSize,
-        ImagesController.uploadImage
+        AuthValidationMiddleware.validJWTNeeded, //valida JWT
+        AuthValidationMiddleware.isAdmin, //valida que sea usuario Admin
+        ImagesMiddleware.validateImageFormat, //valida que solo sea png o jpg
+        ImagesMiddleware.validateImageSize, //valida el peso de la imagen
+        ImagesController.uploadImage //sube la imagen a cloudinary y guarda en la DB
+      );
+
+    this.app
+      .route("/image/:imageId")
+      .get(
+        AuthValidationMiddleware.validJWTNeeded, //valida JWT
+        ImagesMiddleware.validateObjectid,
+        ImagesMiddleware.validateImageId,
+        ImagesController.getImage //sube la imagen a cloudinary y guarda en la DB
+      );
+
+    this.app
+      .route("/image/:imageId")
+      .delete(
+        AuthValidationMiddleware.validJWTNeeded, //valida JWT
+        AuthValidationMiddleware.isAdmin, //valida que sea usuario Admin
+        ImagesMiddleware.validateObjectid,
+        ImagesMiddleware.validateImageId,
+        ImagesController.deleteImage //sube la imagen a cloudinary y guarda en la DB
       );
 
     return this.app;

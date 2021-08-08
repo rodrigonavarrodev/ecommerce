@@ -1,6 +1,37 @@
 import express from "express";
+import ImagesService from "./images.service";
 
 class ImagesMiddleware {
+
+  async validateObjectid(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) {
+    if (!req.params.imageId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).send({
+        errors: [{ msg: "not an objectid" }],
+      });
+    }
+    next();
+  }
+
+  async validateImageId(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) {
+    const image: any = await ImagesService.getImageById(
+      req.params.imageId
+    );
+    if (!image) {
+      return res.status(400).send({
+        errors: [{ msg: "the id does not belong to any image" }],
+      });
+    }
+    next();
+  }
+
   async validateImageFormat(
     req: express.Request,
     res: express.Response,

@@ -1,6 +1,7 @@
 import express from "express";
 import { ObjectId } from "mongodb";
 import CategoriesService from "../categories/categories.service";
+import ImagesService from "../images/images.service";
 import ProductsService from "./products.service";
 
 class ProductsMiddleware {

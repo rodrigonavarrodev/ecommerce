@@ -24,7 +24,7 @@ export class CategoriesRoutes extends CommonRoutesConfig {
         AuthValidationMiddleware.isAdmin, //verifica si es Admin
         CategoriesMiddleware.verifyCategoryExists, //verifica que ese Name no exista (solo puede ingresar las enumeradas en el categoires.dao.ts)
         CategoriesController.createCategory //crea la categoria
-      );
+      )
 
       this.app
       .route("/categories/:categoryId")
@@ -33,11 +33,26 @@ export class CategoriesRoutes extends CommonRoutesConfig {
         CategoriesMiddleware.validateObjectid, //valida que sea un id de mongo
         CategoriesMiddleware.validateCategoryId, //valida que el id pertenezca a un id de la coleccion Categories
         CategoriesController.getCategoryById //devuelve la categoria
-      );
+      )
 
-      //FALTA
-      //Actualizar categoria
-      //Borrar categoria
+      .put(
+        body("name").isString().notEmpty(),
+        BodyValidationMiddleware.verifyBodyFieldsErrors,
+        AuthValidationMiddleware.validJWTNeeded, //valida JWT
+        AuthValidationMiddleware.isAdmin, //verifica si es Admin
+        CategoriesMiddleware.validateObjectid, //valida que sea un id de mongo
+        CategoriesMiddleware.validateCategoryId, //valida que el id pertenezca a un id de la coleccion Categories
+        CategoriesMiddleware.verifyCategoryExists, //verifica que ese Name no exista (solo puede ingresar las enumeradas en el categoires.dao.ts)
+        CategoriesController.updateCategory //crea la categoria
+      )
+
+      .delete(
+        AuthValidationMiddleware.validJWTNeeded, //valida JWT
+        AuthValidationMiddleware.isAdmin, //verifica si es Admin
+        CategoriesMiddleware.validateObjectid, //valida que sea un id de mongo
+        CategoriesMiddleware.validateCategoryId, //valida que el id pertenezca a un id de la coleccion Categories
+        CategoriesController.deleteCategory //crea la categoria
+      )
 
     return this.app;
   }

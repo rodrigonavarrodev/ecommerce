@@ -38,6 +38,19 @@ class ProductsService implements CRUD {
     await ProductsDao.updateStock(resource.productId, stock)
   }
 
+  async deleteImageReference(productId: string, images: any) {
+    await ProductsDao.updateProductsImages(productId, images)
+  }
+
+  async updateProduct(productId: string, resoruce: any) {
+    const product = await ProductsDao.updateProduct(productId, resoruce)
+    return { ...this.productDetails(product) };
+  }
+
+  async deleteProduct(productId: string) {
+    return ProductsDao.deleteProduct(productId)
+  }
+
   productDetails(product: any) {
     const { id, name, category, price, stock, images } = product;
     return {

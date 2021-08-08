@@ -38,32 +38,55 @@ class ProductsDao {
   }
 
   async getAll() {
-    return this.Product.find().populate('category')
+    return this.Product.find().populate("category").populate("images");
   }
 
-  async getById(id: string) {    
-    return this.Product.findById(id).populate('category')
+  async getById(id: string) {
+    return this.Product.findById(id).populate("category").populate("images");
   }
 
   async create(productFields: ProductsModel.createProduct) {
-    const product = new this.Product({...productFields})
-    await product.save()
-    return product
+    const product = new this.Product({ ...productFields });
+    await product.save();
+    return product;
   }
 
   async getAllByCategory(categoryId: string) {
     console.log(categoryId);
-    
-    return this.Product.find({ category: categoryId })
+
+    return this.Product.find({ category: categoryId });
   }
 
   async updateStock(productId: string, stock: number) {
     return this.Product.findOneAndUpdate(
       { _id: productId },
-      { $set: { stock: stock} },
-      { new: true })
+      { $set: { stock: stock } },
+      { new: true }
+    );
   }
 
+  async updateProductsImages(productId: string, images: any) {
+    return this.Product.findOneAndUpdate(
+      { _id: productId },
+      { $set: { images: images } },
+      { new: true }
+    );
+  }
+
+  async updateProduct(productId: string, productFields: any) {
+    await this.Product.findByIdAndUpdate(
+      { _id: productId },
+      { $set: { ...productFields } },
+      { new: true }
+    );
+    return this.Product.findById(productId)
+      .populate("category")
+      .populate("images");
+  }
+
+  async deleteProduct(productId: string) {
+    await this.Product.findByIdAndDelete(productId)
+  }
 }
 
 export default new ProductsDao();

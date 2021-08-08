@@ -66,6 +66,39 @@ class ProductsController {
       }
     }
   }
+
+  async updateProduct(req: express.Request, res: express.Response) {
+    try {
+      const product = await ProductsService.updateProduct(
+        req.params.productId,
+        req.body
+      );
+      return res
+        .status(200)
+        .send({ msg: "Successful response", data: product });
+    } catch (error) {
+      if (error.msg) {
+        return res.status(400).send({ errors: [error] });
+      } else {
+        return res.status(400).send({ errors: [error.message] });
+      }
+    }
+  }
+
+  async deleteProduct(req: express.Request, res: express.Response) {
+    try {
+      await ProductsService.deleteProduct(req.params.productId)
+      return res
+        .status(200)
+        .send({ msg: "Successful deleted"});
+    } catch (error) {
+      if (error.msg) {
+        return res.status(400).send({ errors: [error] });
+      } else {
+        return res.status(400).send({ errors: [error.message] });
+      }
+    }
+  }
 }
 
 export default new ProductsController();
